@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".dashboard.CommentActivity">
+
+        <ProgressBar
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+
+            <LinearLayout
+                android:id="@+id/ll"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/ic_baseline_arrow_back_24"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="5dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Comment"
+                    android:textColor="@color/primary_color"
+                    style="@style/TextAppearance.AppCompat.Title"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"/>
+
+            </LinearLayout>
+
+            <View
+                android:id="@+id/viewll"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/primary_color"
+                android:layout_below="@+id/ll"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                tools:listitem="@layout/comment_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/viewll"
+                android:layout_above="@+id/rl"
+                android:id="@+id/cmtRv"/>
+
+            <RelativeLayout
+                android:id="@+id/rl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:orientation="horizontal">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/profile"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    app:cardCornerRadius="50dp"
+                    android:elevation="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginBottom="5dp"
+                    app:cardBackgroundColor="@color/primary_color"
+                    android:layout_marginTop="10dp">
+
+                    <ImageView
+                        android:scaleType="centerCrop"
+                        android:id="@+id/imageProfile2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+                </androidx.cardview.widget.CardView>
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/commentTxt"
+                    android:layout_toStartOf="@+id/postBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@+id/profile"
+                    android:background="@android:color/transparent"
+                    android:textAlignment="textStart"
+                    android:hint="Give your opinion.."
+                    android:maxLines="100"
+                    android:layout_marginEnd="40dp"
+                    android:paddingStart="15dp"
+                    android:layout_marginTop="10dp"/>
+
+                <TextView
+                    android:id="@+id/postBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="post"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="20dp"
+                    android:textSize="18sp"
+                    android:layout_marginEnd="20dp"
+                    android:textColor="#1B87DD"
+                    android:layout_marginBottom="10dp"/>
+            </RelativeLayout>
+        </RelativeLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

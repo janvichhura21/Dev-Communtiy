@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/drawerLayout"
+        tools:context=".MainActivity">
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp">
+
+
+            <ImageView
+                android:visibility="gone"
+                android:id="@+id/disconnected"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:src="@drawable/network"
+                android:layout_marginTop="300dp"
+                android:layout_marginStart="150dp"/>
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Oops! You should check\n your network"
+                android:textSize="18sp"
+                android:textAlignment="center"
+                android:fontFamily="@font/poppinsregular"
+                android:layout_marginTop="400dp"
+                android:layout_marginStart="80dp"/>
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/menuId"
+                android:layout_width="50dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="20dp"
+                app:navigationIcon="@drawable/ic_baseline_menu_24" />
+
+
+            <TextView
+                android:id="@+id/hello"
+                android:textSize="18sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_marginStart="-20dp"
+                android:layout_toEndOf="@+id/menuId"
+                android:textColor="@color/primary_color"
+                android:fontFamily="@font/anaconda"
+                android:text="Hello "/>
+            <TextView
+                android:textSize="18sp"
+                android:layout_toEndOf="@+id/hello"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:textColor="@color/btn_color"
+                android:fontFamily="@font/anaconda"
+                android:text="Sharks"/>
+
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="110dp"
+                android:layout_marginBottom="20dp"
+                android:src="@drawable/notification" />
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="60dp"
+                android:layout_marginBottom="20dp"
+                android:src="@drawable/chatting" />
+
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                app:cardCornerRadius="50dp"
+                android:elevation="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_alignParentEnd="true"
+                app:cardBackgroundColor="@color/primary_color"
+                android:layout_marginTop="10dp">
+
+                <ImageView
+                    android:scaleType="centerCrop"
+                    android:id="@+id/imageProfile2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    />
+            </androidx.cardview.widget.CardView>
+        </RelativeLayout>
+
+
+        <com.google.android.material.navigation.NavigationView
+            android:id="@+id/nav_view"
+            android:layout_width="match_parent"
+            android:layout_gravity="start"
+            android:fitsSystemWindows="true"
+            app:menu="@menu/menu_nav"
+            app:headerLayout="@layout/header_layout"
+            android:layout_height="match_parent"/>
+
+        <fragment
+            android:id="@+id/nav_host_fragment"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/bottomnav"
+            app:layout_constraintTop_toTopOf="parent"
+            app:navGraph="@navigation/nav"
+            android:name="androidx.navigation.fragment.NavHostFragment" />
+
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:id="@+id/bottomnav"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <com.google.android.material.bottomappbar.BottomAppBar
+                android:id="@+id/bottomappbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                app:fabCradleMargin="10dp"
+                app:fabCradleVerticalOffset="0dp"
+                app:fabCradleRoundedCornerRadius="50dp"
+
+                >
+
+                <com.google.android.material.bottomnavigation.BottomNavigationView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:menu="@menu/bottom_menu"
+                    android:background="@android:color/transparent"
+                    android:id="@+id/bottommenu" />
+            </com.google.android.material.bottomappbar.BottomAppBar>
+
+
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="30dp"
+                android:id="@+id/scannerFragment"
+                android:src="@drawable/post"
+                android:backgroundTint="@color/btn_color"
+                app:layout_anchor="@id/bottomappbar" />
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+      <!--  <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/shimmer_view_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <include layout="@layout/list_item_shrimmer" />
+
+                <include layout="@layout/list_item_shrimmer" />
+
+                <include layout="@layout/list_item_shrimmer" />
+
+                <include layout="@layout/list_item_shrimmer" />
+
+                <include layout="@layout/list_item_shrimmer" />
+
+                <include layout="@layout/list_item_shrimmer" />
+
+                <include layout="@layout/list_item_shrimmer" />
+            </LinearLayout>
+        </com.facebook.shimmer.ShimmerFrameLayout>
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefresh"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="1dp"
+                android:layout_marginLeft="1dp"
+                android:layout_marginTop="25dp"
+                android:layout_marginEnd="1dp"
+                android:layout_marginRight="1dp"
+                android:layout_marginBottom="1dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+-->
+    </androidx.drawerlayout.widget.DrawerLayout>
+
+</layout>
