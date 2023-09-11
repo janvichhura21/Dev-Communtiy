@@ -2,9 +2,11 @@ package com.example.devcommunity.dashboard
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isNotEmpty
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -12,6 +14,7 @@ import com.bumptech.glide.Glide
 import com.example.devcommunity.databinding.PostItemBinding
 import com.example.devcommunity.login.DetailActivity
 import com.example.devcommunity.model.Post
+import com.example.devcommunity.post.WebActivity
 
 class PostAdapter (val context: Context): RecyclerView.Adapter<PostAdapter.HomeViewHolder>() {
     var listitem: List<Post> = listOf()
@@ -45,10 +48,11 @@ class PostAdapter (val context: Context): RecyclerView.Adapter<PostAdapter.HomeV
 
     override fun onBindViewHolder(holder: HomeViewHolder, position: Int) {
         val data=listitem[position]
+
         Glide.with(context)
             .load(data.profilePic)
             .into(holder.binding.imageProfile2)
-        holder.bind(data)
+
         if (data.postPic.isEmpty()){
             holder.binding.postPic.visibility=View.GONE
         }else{
@@ -81,11 +85,26 @@ class PostAdapter (val context: Context): RecyclerView.Adapter<PostAdapter.HomeV
         }
         holder.binding.comment.setOnClickListener {
             val intent= Intent(context, CommentActivity::class.java)
+            intent.putExtra("itemId",data.postId)
            // intent.putExtra("url",data.postPic)
          //   intent.putExtra("name",data.name)
            // intent.putExtra("price",data.price)*/
             context.startActivity(intent)
         }
+
+        val textValue=holder.binding.linkView.text
+        if (data.link.isNotEmpty()){
+            holder.binding.apply {
+                linkBtn.visibility=View.VISIBLE
+                linkBtn.setOnClickListener {
+                    val intent=Intent(context,WebActivity::class.java)
+                    intent.putExtra("link",data.link)
+
+                    context.startActivity(intent)
+                }
+            }
+        }
+        holder.bind(data)
     }
 
     override fun getItemCount(): Int {

@@ -1,6 +1,8 @@
 package com.example.devcommunity.model
 
 import android.view.KeyEvent
+import android.view.View
+import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 

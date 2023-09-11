@@ -9,4 +9,6 @@ data class User(
     var collage:String="",
     var gender:Boolean=false,
     var profile:String="",
+    var online: Boolean = false
+
 )

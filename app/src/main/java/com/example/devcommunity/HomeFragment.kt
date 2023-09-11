@@ -15,11 +15,13 @@ import com.example.devcommunity.dashboard.PostAdapter
 import com.example.devcommunity.databinding.FragmentDetailBinding
 import com.example.devcommunity.databinding.FragmentHomeBinding
 import com.example.devcommunity.login.LoginViewModel
+import com.example.devcommunity.model.Post
+import com.example.devcommunity.post.PostViewModel
 
 class HomeFragment : Fragment() {
     lateinit var binding: FragmentHomeBinding
     lateinit var postAdapter: PostAdapter
-    private val viewModel : LoginViewModel by viewModels()
+    private val viewModel : PostViewModel by viewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -36,14 +38,19 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         postAdapter= PostAdapter(requireContext())
         viewModel.getUser()
-        viewModel.getPostDetail()
+        viewModel.fetchPosts()
         getPostData()
     }
 
     private fun getPostData() {
 
         viewModel.postData.observe(viewLifecycleOwner, Observer {
-            postAdapter.listitem=it
+            val data: ArrayList<Post> = ArrayList()
+
+                postAdapter.listitem=it
+
+
+
         })
         Handler(Looper.getMainLooper()).postDelayed({
             binding.shimmerViewContainer.visibility=View.GONE

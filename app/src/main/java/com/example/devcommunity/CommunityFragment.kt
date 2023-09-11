@@ -1,59 +1,103 @@
 package com.example.devcommunity
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import com.example.devcommunity.Chat.ChatFragment
+import com.example.devcommunity.Chat.GroupFragment
+import com.example.devcommunity.Chat.ViewPagerAdapter
+import com.example.devcommunity.community.CommunityViewModel
+import com.example.devcommunity.community.CommunityAdapter
+import com.example.devcommunity.community.GroupActivity
+import com.example.devcommunity.community.GroupAdapter
+import com.example.devcommunity.databinding.FragmentCommunityBinding
+import com.example.devcommunity.model.Group
+import com.example.devcommunity.model.User
+import com.example.devcommunity.toolBar.ContactFragment
+import com.example.devcommunity.toolBar.InviteFragment
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [CommunityFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class CommunityFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
-
+class CommunityFragment : Fragment(),GroupAdapter.OnMessageItemClickListener {
+    lateinit var firebaseAuth: FirebaseAuth
+   private lateinit var userListener: ListenerRegistration
+    private val viewModel : CommunityViewModel by viewModels()
+    lateinit var binding: FragmentCommunityBinding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_community, container, false)
+        binding=DataBindingUtil.inflate(layoutInflater,R.layout.fragment_community, container, false)
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment CommunityFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            CommunityFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel.getUser()
+        viewModel.getAllGroups()
+        firebaseAuth= FirebaseAuth.getInstance()
+       val adapter = activity?.supportFragmentManager?.let { ViewPagerAdapter(it) }
+        adapter?.addFragment(GroupFragment(), "Community")
+        adapter?.addFragment(ChatFragment(), "Personal")
+        adapter?.addFragment(ContactFragment(), "Contact")
+
+        binding.viewPager2.adapter = adapter
+        binding.tabLayout.setupWithViewPager(binding.viewPager2)
+        listenForUserOnlineStatus(firebaseAuth.currentUser?.uid!!)
+    }
+
+
+    override fun onMessageItemClick(message: Group) {
+
+        val intent= Intent(context, GroupActivity::class.java)
+        intent.putExtra("gN",message.groupName)
+        viewModel.resultData.observe(viewLifecycleOwner, Observer {
+            it?.forEach {
+                intent.putExtra("name", it.name)
+            }
+        })
+        startActivity(intent)
+    }
+
+
+    private fun listenForUserOnlineStatus(userId: String) {
+        var db= FirebaseFirestore.getInstance()
+        val userRef = db.collection("Users").document(userId)
+
+        userListener = userRef.addSnapshotListener { snapshot, exception ->
+            if (exception != null) {
+                // Handle error
+                return@addSnapshotListener
+            }
+
+            if (snapshot != null && snapshot.exists()) {
+                val user = snapshot.toObject(User::class.java)
+                if (user != null) {
+                    // Update your UI based on the user's online status
+                    val isOnline = user.online
+                    Log.d("islogin",isOnline.toString())
+                    // For example, display an "Online" indicator next to the user's name
                 }
             }
+        }
     }
+
+
+
+
+
+
+
+
 }

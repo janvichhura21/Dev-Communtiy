@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+       <variable name="viewModel"
+        type="com.example.devcommunity.login.LoginViewModel" />
     </data>
 
     <androidx.drawerlayout.widget.DrawerLayout
@@ -73,6 +74,7 @@
 
 
             <ImageView
+                android:id="@+id/notification"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_alignParentEnd="true"
@@ -125,10 +127,11 @@
             android:id="@+id/nav_host_fragment"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_marginBottom="20dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/bottomnav"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/bottomnav"
             app:navGraph="@navigation/nav"
             android:name="androidx.navigation.fragment.NavHostFragment" />
 
@@ -165,6 +168,7 @@
                 android:layout_marginBottom="30dp"
                 android:id="@+id/scannerFragment"
                 android:src="@drawable/post"
+                android:contentDescription="Enter How Much Cookies You Want"
                 android:backgroundTint="@color/btn_color"
                 app:layout_anchor="@id/bottomappbar" />
         </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,8 +1,10 @@
 package com.example.devcommunity.model
 
 data class Comment(
-    var id:String="",
-    var username:String="",
+    var commentId: String = "",
+    var userId: String = "",
+    var username: String = "",
+    var commentText: String = "",
     var profilePic:String="",
-    var commentList:String=""
+    var timestamp: Long = 0L
 )

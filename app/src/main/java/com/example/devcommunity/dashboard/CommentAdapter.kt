@@ -1,73 +1,53 @@
 package com.example.devcommunity.dashboard
 
+
+
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.AsyncListDiffer
-import androidx.recyclerview.widget.DiffUtil
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.devcommunity.databinding.CommentItemBinding
-import com.example.devcommunity.databinding.PostItemBinding
+import com.example.devcommunity.R
 import com.example.devcommunity.model.Comment
-import com.example.devcommunity.model.Post
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
-class CommentAdapter (val context: Context): RecyclerView.Adapter<CommentAdapter.HomeViewHolder>() {
-    var listitem: List<Comment> = listOf()
-    val cmt=ArrayList<String>()
-    var commentitem: List<String> = listOf()
-        set(value) {
-            notifyItemRangeRemoved(1, listitem.size)
-            field = value
-            notifyItemRangeInserted(1, listitem.size)
-        }
+class CommentAdapter(private  val context: Context, var comments: List<Comment>) :
+    RecyclerView.Adapter<CommentAdapter.CommentViewHolder>() {
 
-    class HomeViewHolder(val binding: CommentItemBinding) :RecyclerView.ViewHolder(binding.root) {
-        fun bind(data:Comment){
-            binding.lisitems=data
-
-
-        }
+    inner class CommentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val usernameTextView: TextView = itemView.findViewById(R.id.txt)
+        val commentTextView: TextView = itemView.findViewById(R.id.cmtPost)
+        val time: TextView = itemView.findViewById(R.id.times)
+        val profile: ImageView = itemView.findViewById(R.id.imageProfile3)
     }
 
-    private val differCallBack = object : DiffUtil.ItemCallback<Comment>(){
-        override fun areItemsTheSame(oldItem: Comment, newItem: Comment): Boolean {
-            return oldItem.id == newItem.id
-        }
-
-        override fun areContentsTheSame(oldItem: Comment, newItem: Comment): Boolean {
-            return oldItem == newItem
-        }
-
-    }
-    val differ= AsyncListDiffer(this,differCallBack)
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeViewHolder {
-        return HomeViewHolder(CommentItemBinding.inflate(LayoutInflater.from(parent.context),parent,false))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommentViewHolder {
+        val itemView = LayoutInflater.from(parent.context)
+            .inflate(R.layout.comment_item, parent, false)
+        return CommentViewHolder(itemView)
     }
 
-
-    override fun onBindViewHolder(holder: HomeViewHolder, position: Int) {
-        val data=listitem[position]
+    override fun onBindViewHolder(holder: CommentViewHolder, position: Int) {
+        val comment = comments[position]
+        holder.usernameTextView.text = comment.username
+        holder.commentTextView.text = comment.commentText
+        val dateFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+        val time = dateFormat.format(Date(comment.timestamp))
+        Log.d("time",time)
+        holder.time.text= time
         Glide.with(context)
-            .load(data.profilePic)
-            .into(holder.binding.imageProfile3)
-        holder.binding.txt.text=data.username
-       holder.binding.cmtPost.text=data.commentList
-        holder.bind(data)
-
-        /*data.comment.forEach {
-            holder.binding.cmtPost.text=it
-        }*/
-
-
+            .load(comment.profilePic)
+            .into(holder.profile)
     }
 
-    override fun getItemCount(): Int {
-        return listitem.size
-    }
+    override fun getItemCount(): Int = comments.size
 }
+
 
 

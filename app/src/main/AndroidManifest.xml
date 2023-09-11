@@ -5,6 +5,11 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
 
     <application
         android:allowBackup="true"
@@ -17,12 +22,29 @@
         android:theme="@style/Theme.DevCommunity"
         tools:targetApi="31">
         <activity
+            android:name=".profile.ProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".toolBar.TopActivity"
+            android:exported="false" />
+        <activity
+            android:name=".post.WebActivity"
+            android:exported="false" />
+        <activity
+            android:name=".community.GroupActivity"
+            android:exported="false" />
+        <activity
+            android:name=".community.ChatActivity"
+            android:exported="false" />
+        <activity
+            android:name=".post.ScannerActivity"
+            android:exported="true" />
+        <activity
             android:name=".dashboard.CommentActivity"
             android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
-
         </activity>
         <activity
             android:name=".login.DetailActivity"
@@ -38,6 +60,7 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+
         <activity
             android:name=".splash.SplashActivity"
             android:exported="true">
@@ -51,6 +74,26 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+        <service
+            android:name=".toolBar.MyFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        <meta-data
+            android:name="com.google.firebase.analytics.api_key"
+            android:value="BAksqzTa4DG9wNwcNfAr-BLu26r8r6kWfISE23THOI_sYCJQvcGNSuIQRtBM_RXYkC-hY6Zdzin2gj85B3kVCXc" />
+
+        <!-- Firebase Cloud Messaging -->
+
+        <service
+            android:name=".MyFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
         <activity
             android:name=".MainActivity"
             android:exported="true" />

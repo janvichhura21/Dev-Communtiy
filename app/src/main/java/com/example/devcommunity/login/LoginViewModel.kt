@@ -5,20 +5,34 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.devcommunity.model.Comment
+import com.example.devcommunity.model.Group
 import com.example.devcommunity.model.Post
 import com.example.devcommunity.model.User
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.GenericTypeIndicator
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.SetOptions
+import java.text.SimpleDateFormat
+import java.util.*
 
 class LoginViewModel:ViewModel(){
 
     var db= FirebaseFirestore.getInstance()
     var docName=""
     var username=MutableLiveData<String>()
+    var timestamp=MutableLiveData<String?>()
+    var profile=MutableLiveData<String>()
     val resultData=MutableLiveData<List<User>>()
-    val postData=MutableLiveData<List<Post>>()
-    val cmtData=MutableLiveData<List<Comment>>()
+    var gN = MutableLiveData<String>()
+    var username1 = MutableLiveData<String>()
+    var dp1 = MutableLiveData<String?>()
+    var firestore = FirebaseFirestore.getInstance()
+    var dataChange = MutableLiveData<List<Group>>()
    fun setData(user: User){
        docName=user.collage
         var db= FirebaseFirestore.getInstance()
@@ -31,6 +45,7 @@ class LoginViewModel:ViewModel(){
             "collage" to user.collage,
             "gender" to user.gender,
             "profile" to user.profile,
+            "online" to user.online,
 
         )
 
@@ -46,62 +61,89 @@ class LoginViewModel:ViewModel(){
 
     }
 
+    fun getProfile(senderId:String){
+        db.collection("Users")
+            .document(senderId)
+            .get()
+            .addOnSuccessListener { documentSnapshot ->
+                if (documentSnapshot.exists()) {
+                    val userId=documentSnapshot.getString("id")
+                    if (senderId==userId){
+                        val profilePicUrl = documentSnapshot.getString("profile")
+                        Log.d("userId",userId.toString())
+                      //  dp1.value=profilePicUrl
+                    }
+
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.d("janvi",exception.message.toString())
+
+            }
+    }
+    fun getUserDetail() {
+        firestore.collection("Users")
+            .whereEqualTo("id", FirebaseAuth.getInstance().currentUser!!.uid)
+            .get()
+            .addOnSuccessListener {
+                val data = it.toObjects(User::class.java)
+                data.forEach { user ->
+                    username1.value = user.name
+                    dp1.value = user.profile
+                }
+                resultData.value = data
+            }
+    }
+    fun getAllGroups() {
+        val database: DatabaseReference = FirebaseDatabase.getInstance().reference
+
+        database.child("Group").get()
+            .addOnSuccessListener { dataSnapshot ->
+                val groups = ArrayList<Group>()
+
+                dataSnapshot.children.forEach { groupSnapshot ->
+                    val groupName = groupSnapshot.key.toString()
+                    val items =
+                        groupSnapshot.getValue(object :
+                            GenericTypeIndicator<HashMap<String, ArrayList<User>>>() {})
+                    val group = Group(groupName, items ?: hashMapOf())
+                    gN.value=groupName
+                    groups.add(group)
+
+                }
+
+                val sortedGroups = groups.sortedByDescending { it.groupName }
+                dataChange.value = sortedGroups
+
+            }
+            .addOnFailureListener {
+                // Handle the failure to fetch groups
+            }
+    }
+
+
     fun getUser(){
         db.collection("Users")
             .whereEqualTo("id",FirebaseAuth.getInstance().currentUser?.uid.toString())
             .get()
             .addOnSuccessListener {
+
                 val data=it.toObjects(User::class.java)
                 data.forEach { user ->
                     username.value=user.name
+                    profile.value=user.profile
+
+                    Log.d("janviC", profile.toString())
                 }
                 resultData.value=data
             }
     }
 
-    fun getPostDetail(){
-        db.collection("Post")
-            .get()
-            .addOnSuccessListener {
-                val data =it.toObjects(Post::class.java)
-                postData.value=data
-            }
-
+    private fun formatDate(date: Date): String {
+        val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+        return sdf.format(date)
     }
 
-    fun getComment(){
-        db.collection("Post")
-            .document("KuGvyJ4gSOrgkiv0ADmi")
-            .collection("Comment")
-            .get()
-            .addOnSuccessListener {
-                val data =it.toObjects(Comment::class.java)
-                cmtData.value=data
-            }
-
-    }
-    fun setComment(post: Comment){
-        val cmt= hashMapOf(
-            "id" to post.id,
-            "username" to post.username,
-            "commentList" to  post.commentList,
-            "profilePic" to post.profilePic,
-        )
-        db.collection("Post")
-            //.whereEqualTo("id",FirebaseAuth.getInstance().currentUser?.uid.toString())
-            .document("KuGvyJ4gSOrgkiv0ADmi")
-            .collection("Comment")
-            .document()
-            .set(cmt, SetOptions.merge())
-            .addOnSuccessListener {
-                Log.d("janvi","Success")
-
-            }.addOnFailureListener {
-                Log.d("janvi",it.message.toString())
-            }
-
-
-    }
 
 
 }
